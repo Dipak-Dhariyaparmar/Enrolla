@@ -1,0 +1,24 @@
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "rootDir": ".",
+    "sourceMap": true,
+    "declaration": false,
+    "moduleResolution": "node",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "importHelpers": true,
+    "target": "es2015",
+    "module": "esnext",
+    "lib": ["es2017", "dom"],
+    "skipLibCheck": true,
+    "skipDefaultLibCheck": true,
+    "baseUrl": ".",
+    "paths": {
+      "@enrolla/graphql-codegen": ["libs/graphql-codegen/src/index.ts"],
+      "@enrolla/node-server-sdk": ["libs/node-server-sdk/src/index.ts"],
+      "@enrolla/prisma-models": ["libs/prisma-models/src/index.ts"]
+    }
+  },
+  "exclude": ["node_modules", "tmp"]
+}

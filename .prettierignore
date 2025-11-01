@@ -1,0 +1,10 @@
+# Add files here to ignore them from prettier formatting
+CHANGELOG.md
+/dist
+/coverage
+/libs/graphql-codegen/src/output
+/docs
+/libs/node-server-sdk/graphql-codegen
+/graphql/schema.gql
+package.json
+package-lock.json

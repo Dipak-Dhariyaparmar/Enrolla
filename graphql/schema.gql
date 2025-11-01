@@ -1,0 +1,346 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type ApiToken {
+  id: Cuid!
+  name: String!
+  token: String!
+  createdAt: DateTime!
+}
+
+"""
+A field whose value conforms to the standard cuid format as specified in https://github.com/ericelliott/cuid#broken-down
+"""
+scalar Cuid @specifiedBy(url: "https://github.com/ericelliott/cuid#broken-down")
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type EncryptionKey {
+  id: Cuid!
+  publicKey: String!
+  createdAt: DateTime!
+}
+
+type Feature {
+  id: Cuid!
+  tenantId: String!
+  key: String!
+  type: FeatureType!
+  defaultValue: JSON!
+  description: String
+  createdAt: DateTime!
+}
+
+enum FeatureType {
+  INTEGER
+  FLOAT
+  STRING
+  BOOLEAN
+  JSON
+  ARRAY
+}
+
+"""
+The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
+"""
+scalar JSON @specifiedBy(url: "http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf")
+
+type FeatureValue {
+  feature: Feature!
+  value: JSON!
+}
+
+type Package {
+  id: Cuid!
+  tenantId: String!
+  parentPackage: Package
+  parentPackageId: Cuid
+  name: String!
+  version: SemVer!
+  features: [FeatureValue!]!
+  effectiveConfiguration: [FeatureValue!]!
+  description: String
+  icon: String
+  createdAt: DateTime!
+}
+
+"""A field whose value is a Semantic Version: https://semver.org"""
+scalar SemVer
+
+type Secret {
+  id: Cuid!
+  key: String!
+  value: String!
+  ephemPubKey: String!
+  nonce: String!
+  createdAt: DateTime!
+}
+
+type Customer {
+  id: Cuid!
+  tenantId: String!
+  organizationId: String
+  name: String!
+  package: Package
+  packageId: String
+  features: [FeatureValue!]!
+  secrets: [Secret!]!
+  effectiveConfiguration: [FeatureValue!]!
+  createdAt: DateTime!
+}
+
+type Organization {
+  id: String!
+  name: String!
+}
+
+type DBFeatureMetadata {
+  name: String!
+  type: FeatureType!
+}
+
+type DBCustomer {
+  organizationId: String!
+  name: String!
+}
+
+type Integration {
+  name: String!
+  isAvailable: Boolean!
+  isConfigured: Boolean!
+}
+
+type SecretKey {
+  id: Cuid!
+  key: String!
+  createdAt: DateTime!
+}
+
+type SDKFeature {
+  key: String!
+  type: FeatureType!
+  defaultValue: JSON!
+}
+
+type SDKFeatureValue {
+  feature: SDKFeature!
+  value: JSON!
+}
+
+type CustomerForSubscription {
+  organizationId: String
+  secrets: [Secret!]!
+  effectiveConfiguration: [SDKFeatureValue!]!
+}
+
+type Query {
+  apiTokens: [ApiToken!]!
+  encryptionKeys: [EncryptionKey!]!
+  encryptionKey: EncryptionKey
+  features: [Feature!]!
+  feature(id: String!): Feature!
+  packages: [Package!]!
+  package(id: String!): Package!
+  customers: [Customer!]!
+  customer(id: String!): Customer!
+  organizations: [Organization!]!
+  organization(id: String!): Organization!
+  integrations: [Integration!]!
+  fetchMongoSchema(mongoOptions: MongoDBOptions!): [DBFeatureMetadata!]!
+  fetchMongoCustomers(mongoOptions: MongoDBOptions!, input: FetchCustomersInput!): [DBCustomer!]!
+  fetchPostgresSchema(postgresOptions: PostgresQLOptions!): [DBFeatureMetadata!]!
+  fetchPostgresCustomers(postgresOptions: PostgresQLOptions!, input: FetchCustomersInput!): [DBCustomer!]!
+  secretKeys: [SecretKey!]!
+  hasSecrets: Boolean!
+}
+
+input MongoDBOptions {
+  host: String!
+  port: Float
+  database: String!
+  username: String
+  password: String
+  isSrv: Boolean! = false
+  collection: String
+}
+
+input FetchCustomersInput {
+  organizationIdField: String!
+  customerNameField: String!
+}
+
+input PostgresQLOptions {
+  host: String!
+  port: Float
+  database: String!
+  username: String
+  password: String
+  schema: String!
+  table: String!
+}
+
+type Mutation {
+  createApiToken(input: CreateApiTokenInput!): ApiToken!
+  removeApiToken(id: String!): ApiToken!
+  createEncryptionKey(input: CreateEncryptionKeyInput!): EncryptionKey!
+  removeEncryptionKey(id: String!): EncryptionKey!
+  createFeature(input: CreateFeatureInput!): Feature!
+  updateFeature(input: UpdateFeatureInput!): Feature!
+  removeFeature(id: String!): Feature!
+  createPackage(input: CreatePackageInput!): Package!
+  updatePackage(input: UpdatePackageInput!): Package!
+  removePackage(id: String!): Package!
+  createCustomer(input: CreateCustomerInput!): Customer!
+  updateCustomer(input: UpdateCustomerInput!): Customer!
+  updateCustomerByOrgId(input: UpdateCustomerByOrgIdInput!): Customer!
+  removeCustomer(id: String!): Customer!
+  createOrganization(input: CreateOrganizationInput!): Organization!
+  updateOrganization(input: UpdateOrganizationInput!): Organization!
+  removeOrganization(id: String!): Organization!
+  importMongoCustomers(mongoOptions: MongoDBOptions!, input: ImportCustomersInput!): Boolean!
+  importPostgresCustomers(postgresOptions: PostgresQLOptions!, input: ImportCustomersInput!): Boolean!
+  configureAuth0OrganizationManager(input: ConfigureAuth0OrganizationManagerInput!): Boolean!
+  configurePropelauthOrganizationManager(input: ConfigurePropelauthOrganizationManagerInput!): Boolean!
+  configureFirebaseOrganizationManager(input: ConfigureFirebaseOrganizationManagerInput!): Boolean!
+  createSecretKey(input: CreateSecretKeyInput!): SecretKey!
+  removeSecretKey(id: String!): SecretKey!
+}
+
+input CreateApiTokenInput {
+  name: String!
+}
+
+input CreateEncryptionKeyInput {
+  publicKey: String!
+}
+
+input CreateFeatureInput {
+  key: String!
+  type: FeatureType!
+  defaultValue: JSON
+  description: String
+}
+
+input UpdateFeatureInput {
+  id: Cuid!
+}
+
+input CreatePackageInput {
+  name: String!
+  description: String
+  icon: String
+  parentPackageId: Cuid
+  features: [FeatureInstanceInput!]!
+}
+
+input FeatureInstanceInput {
+  featureId: Cuid!
+  value: JSON!
+}
+
+input UpdatePackageInput {
+  name: String
+  description: String
+  icon: String
+  parentPackageId: Cuid
+  features: [FeatureInstanceInput!]
+  id: Cuid!
+  updateStrategy: PackageUpdateStrategy
+}
+
+enum PackageUpdateStrategy {
+  MIGRATE_ALL_CHILDREN
+}
+
+input CreateCustomerInput {
+  organizationId: String
+  createOrganizationName: String
+  name: String!
+  packageId: String
+  features: [FeatureInstanceInput!]
+  secrets: [SecretInput!]
+}
+
+input SecretInput {
+  key: String!
+  value: String!
+  ephemPubKey: String!
+  nonce: String!
+  new: Boolean
+}
+
+input UpdateCustomerInput {
+  organizationId: String
+  createOrganizationName: String
+  name: String
+  packageId: String
+  features: [FeatureInstanceInput!]
+  secrets: [SecretInput!]
+  id: String!
+}
+
+input UpdateCustomerByOrgIdInput {
+  organizationId: String!
+  createOrganizationName: String
+  name: String
+  packageId: String
+  features: [FeatureInstanceInput!]
+  secrets: [SecretInput!]
+  featuresByKey: [FeatureInstanceByKeyInput!]
+}
+
+input FeatureInstanceByKeyInput {
+  key: String!
+  value: JSON!
+}
+
+input CreateOrganizationInput {
+  name: String!
+}
+
+input UpdateOrganizationInput {
+  name: String
+  id: String!
+}
+
+input ImportCustomersInput {
+  organizationIdField: String!
+  customerNameField: String!
+  organizationIds: [String!]!
+  features: [FeatureMappingInput!]!
+}
+
+input FeatureMappingInput {
+  sourceName: String!
+  destinationName: String!
+  type: FeatureType!
+}
+
+input ConfigureAuth0OrganizationManagerInput {
+  clientId: String!
+  clientSecret: String!
+  domain: String!
+}
+
+input ConfigurePropelauthOrganizationManagerInput {
+  apiKey: String!
+  domain: String!
+}
+
+input ConfigureFirebaseOrganizationManagerInput {
+  projectId: String!
+  clientEmail: String!
+  privateKey: String!
+}
+
+input CreateSecretKeyInput {
+  key: String!
+}
+
+type Subscription {
+  customerUpdated: CustomerForSubscription!
+}

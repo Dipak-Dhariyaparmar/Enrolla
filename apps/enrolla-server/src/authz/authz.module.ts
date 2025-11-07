@@ -1,3 +1,5 @@
+//This page is related to authz module
+
 import { Module } from '@nestjs/common';
 import { PassportModule } from '@nestjs/passport';
 import { JwtStrategy } from './jwt-auth.strategy';

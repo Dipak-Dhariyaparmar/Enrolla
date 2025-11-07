@@ -1,4 +1,4 @@
-//This page is related to authz module
+//This page is related to authz modules
 
 import { Module } from '@nestjs/common';
 import { PassportModule } from '@nestjs/passport';

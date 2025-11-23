@@ -1,4 +1,4 @@
-// This component is related to mgmt e2e app main components
+// This component is related to mgmt e2e app main component
 
 import { getGreeting } from '../support/app.po';
 

@@ -1,4 +1,4 @@
-//This utilit is related to configuration
+//This utilit is related to configurations
 
 import { FeatureValue } from '../feature-instances/entities/feature-value.entity';
 

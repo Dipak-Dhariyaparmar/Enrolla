@@ -1,4 +1,4 @@
-//This component is related to empty states
+//This component is related to empty state
 
 import { useNavigation } from '@pankod/refine-core';
 import {
